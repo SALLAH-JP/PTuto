@@ -6,10 +6,10 @@
 
 <AccueilScreen>:
     name: "accueil"
-    BoxLayout:
-        orientation: 'vertical'
-        spacing: 20
-        padding: 50
+    MDBoxLayout:
+        orientation: "vertical"
+        spacing: dp(20)
+        padding: dp(50)
 
         canvas.before:
             Rectangle:
@@ -17,22 +17,25 @@
                 pos: self.pos
                 size: self.size
 
-        Label:
+        MDLabel:
             text: "Bienvenue sur le Simulateur de Robot"
-            font_size: "32sp"
-            color: 1, 1, 1, 1
+            font_style: "H4"
+            halign: "center"
+            theme_text_color: "Primary"
 
-        Button:
+        MDRaisedButton:
             text: "Démarrer la simulation"
             size_hint: (0.6, 0.15)
             pos_hint: {"center_x": 0.5}
             on_release: root.on_simuler_pressed()
-        Button:
+
+        MDRaisedButton:
             text: "Connecter un robot"
             size_hint: (0.6, 0.15)
             pos_hint: {"center_x": 0.5}
             on_release: app.root.current = "robot"
-        Button:
+
+        MDRaisedButton:
             text: "Options et paramètres"
             size_hint: (0.6, 0.15)
             pos_hint: {"center_x": 0.5}
@@ -47,20 +50,21 @@
             pos: self.pos
             size: self.size
 
-    BoxLayout:
+    MDBoxLayout:
         orientation: "vertical"
-        padding: 20
-        spacing: 10
+        padding: dp(20)
+        spacing: dp(10)
 
         Widget:
             id: simulation_widget
 
-        Button:
+        MDRaisedButton:
             text: "Générer des déchets"
             size_hint: 0.2, 0.1
             pos_hint: {"center_x": 0.5}
             on_release: root.generate_dechets()
-        Button:
+
+        MDRaisedButton:
             text: "Retour à l'accueil"
             size_hint: 0.2, 0.1
             pos_hint: {"center_x": 0.5}
@@ -69,148 +73,111 @@
 <RobotScreen>:
     name: "robot"
 
-    BoxLayout:
+    MDBoxLayout:
         orientation: 'horizontal'
-        padding: 20
-        spacing: 10
-        
-        Image:
-            source: "assets/robot/robot2.jpg"   # Chemin vers l'image du robot
-            size_hint_x: 0.2                     # Occupe 20% de la largeur
+        padding: dp(20)
+        spacing: dp(10)
+
+        MDCard:
+            elevation: 8
+            radius: dp(15)
+            size_hint: 0.2, None
+            height: dp(150)
+            MDLabel:
+                text: "Robot connecté"
+                halign: "center"
 
         # Partie droite : Formulaire de connexion
-        BoxLayout:
+        MDBoxLayout:
             orientation: 'vertical'
-            size_hint_x: 0.4                     # Occupe les 40% restants
+            size_hint_x: 0.4
             padding: dp(20)
             spacing: dp(10)
 
-            Label:
+            MDLabel:
                 text: "Connexion au Robot"
-                font_size: '24sp'
-                size_hint_y: 0.2
+                font_style: "H5"
+                halign: "center"
 
-            # Conteneur du formulaire
-            BoxLayout:
-                orientation: 'vertical'
-                size_hint_y: 0.6
-                spacing: dp(10)
+            MDTextField:
+                id: ip_input
+                hint_text: "Entrez l'adresse IP"
 
-                # Champ pour l'adresse IP
-                Label:
-                    text: "Adresse IP :"
-                    size_hint_y: None
-                    height: self.texture_size[1]
-                TextInput:
-                    id: ip_input
-                    multiline: False
-                    hint_text: "Entrez l'adresse IP"
-                    size_hint_y: None
-                    height: dp(40)
+            MDTextField:
+                id: port_input
+                hint_text: "Entrez le port COM"
 
-                # Champ pour le port COM
-                Label:
-                    text: "Port COM :"
-                    size_hint_y: None
-                    height: self.texture_size[1]
-                TextInput:
-                    id: port_input
-                    multiline: False
-                    hint_text: "Entrez le port COM"
-                    size_hint_y: None
-                    height: dp(40)
-
-            # Label d'état de la connexion
-            Label:
+            MDLabel:
                 id: status_label
                 text: "Statut : Déconnecté"
-                size_hint_y: 0.15
-                font_size: '18sp'
-                color: 1, 0, 0, 1
+                theme_text_color: "Error"
 
-            # Bouton de connexion
-            Button:
+            MDRaisedButton:
                 text: "Connecter"
-                size_hint_y: 0.2
-                on_press: root.connect_robot(ip_input.text, port_input.text)
-            Button:
+                on_release: root.connect_robot(ip_input.text, port_input.text)
+
+            MDRaisedButton:
                 text: "Retour à l'accueil"
-                size_hint_y: 0.2
-                on_press: app.root.current = "accueil"
+                on_release: app.root.current = "accueil"
 
 <OptionsScreen>:
     name: "options"
 
-    BoxLayout:
+    MDBoxLayout:
         orientation: "vertical"
         padding: dp(20)
         spacing: dp(10)
 
-        # Entête de l'écran
-        Label:
+        MDLabel:
             text: "Options et Paramètres"
-            font_size: "24sp"
-            size_hint_y: 0.1
+            font_style: "H5"
+            halign: "center"
 
-        # Formulaire sous forme de grille
-        GridLayout:
+        MDGridLayout:
             cols: 2
             spacing: dp(10)
-            size_hint_y: 0.8
 
-            # Champ pour le nombre de déchets
-            Label:
+            MDLabel:
                 text: "Nombre de déchets :"
                 halign: "right"
-            TextInput:
+            MDTextField:
                 id: nb_dechets
-                multiline: False
+                hint_text: "Entrez le nombre"
 
-            # Champ pour la largeur de la plage
-            Label:
+            MDLabel:
                 text: "Largeur de la plage (m) :"
                 halign: "right"
-            TextInput:
+            MDTextField:
                 id: largeur_plage
-                multiline: False
+                hint_text: "Entrez la largeur"
 
-            # Champ pour la longueur de la plage
-            Label:
+            MDLabel:
                 text: "Longueur de la plage (m) :"
                 halign: "right"
-            TextInput:
+            MDTextField:
                 id: longueur_plage
-                multiline: False
+                hint_text: "Entrez la longueur"
 
-            # Champ supplémentaire : Taux de recyclage
-            Label:
+            MDLabel:
                 text: "Taux de recyclage (%) :"
                 halign: "right"
-            TextInput:
+            MDTextField:
                 id: taux_recyclage
-                multiline: False
+                hint_text: "Entrez le taux"
 
-            # Champ supplémentaire : Vitesse de simulation
-            Label:
+            MDLabel:
                 text: "Vitesse de simulation :"
                 halign: "right"
-            TextInput:
+            MDTextField:
                 id: vitesse_simulation
-                multiline: False
+                hint_text: "Entrez la vitesse"
 
-            # Exemple d'un paramètre sous forme de switch (activer/désactiver un mode)
-            Label:
-                text: "Mode avancé :"
-                halign: "right"
-            Switch:
-                id: mode_avance
-
-        # Bouton pour enregistrer/appliquer les paramètres
-        Button:
+        MDRaisedButton:
             text: "Enregistrer les paramètres"
             size_hint_y: 0.1
-            on_press: root.enregistrer_parametres()
-        Button:
+            on_release: root.enregistrer_parametres()
+
+        MDRaisedButton:
             text: "Retour à l'accueil"
             size_hint_y: 0.1
-            on_press: app.root.current = "accueil"
+            on_release: app.root.current = "accueil"
