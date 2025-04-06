@@ -10,7 +10,7 @@ from kivy.lang import Builder
 Builder.load_file('interface.kv')
 
 # Définir les tailles minimales ici
-Window.minimum_width = 510
+Window.minimum_width = 500
 Window.minimum_height = 375
 
 
