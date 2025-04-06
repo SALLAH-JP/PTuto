@@ -4,180 +4,223 @@
     RobotScreen:
     OptionsScreen:
 
+
 <AccueilScreen>:
     name: "accueil"
-    MDBoxLayout:
-        orientation: "vertical"
-        spacing: dp(20)
-        padding: dp(50)
+    MDScreen:
+        MDBoxLayout:
+            orientation: "vertical"
+            spacing: dp(20)
+            padding: dp(50)
+    
+            canvas.before:
+                Rectangle:
+                    source: "assets/backgrounds/background.jpg"
+                    pos: self.pos
+                    size: self.size
+    
+            MDLabel:
+                text: "Bienvenue sur le Simulateur de Robot"
+                font_style: "H4"
+                halign: "center"
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1
+    
+            MDRaisedButton:
+                text: "Démarrer la simulation"
+                size_hint: (0.6, 0.15)
+                pos_hint: {"center_x": 0.5}
+                on_release: root.on_simuler_pressed()
+    
+            MDRaisedButton:
+                text: "Connecter un robot"
+                size_hint: (0.6, 0.15)
+                pos_hint: {"center_x": 0.5}
+                on_release: app.root.current = "robot"
+    
+            MDRaisedButton:
+                text: "Options et paramètres"
+                size_hint: (0.6, 0.15)
+                pos_hint: {"center_x": 0.5}
+                on_release: app.root.current = "options"
 
-        canvas.before:
-            Rectangle:
-                source: "assets/backgrounds/background.jpg"
-                pos: self.pos
-                size: self.size
-
-        MDLabel:
-            text: "Bienvenue sur le Simulateur de Robot"
-            font_style: "H4"
-            halign: "center"
-            theme_text_color: "Primary"
-
-        MDRaisedButton:
-            text: "Démarrer la simulation"
-            size_hint: (0.6, 0.15)
-            pos_hint: {"center_x": 0.5}
-            on_release: root.on_simuler_pressed()
-
-        MDRaisedButton:
-            text: "Connecter un robot"
-            size_hint: (0.6, 0.15)
-            pos_hint: {"center_x": 0.5}
-            on_release: app.root.current = "robot"
-
-        MDRaisedButton:
-            text: "Options et paramètres"
-            size_hint: (0.6, 0.15)
-            pos_hint: {"center_x": 0.5}
-            on_release: app.root.current = "options"
 
 <SimulationScreen>:
     name: "simulation"
+    MDScreen:
+        canvas.before:
+            Rectangle:
+                source: "assets/backgrounds/plage.jpg"
+                pos: self.pos
+                size: self.size
+    
+        MDBoxLayout:
+            orientation: "vertical"
+            padding: dp(20)
+            spacing: dp(10)
+    
+            Widget:
+                id: simulation_widget
+    
+            MDRaisedButton:
+                text: "Générer des déchets"
+                size_hint: (0.2, 0.1)
+                pos_hint: {"center_x": 0.5}
+                on_release: root.generate_dechets()
+    
+            MDRaisedButton:
+                text: "Retour à l'accueil"
+                size_hint: (0.2, 0.1)
+                pos_hint: {"center_x": 0.5}
+                on_release: app.root.current = "accueil"
 
-    canvas.before:
-        Rectangle:
-            source: "assets/backgrounds/plage.jpg"
-            pos: self.pos
-            size: self.size
-
-    MDBoxLayout:
-        orientation: "vertical"
-        padding: dp(20)
-        spacing: dp(10)
-
-        Widget:
-            id: simulation_widget
-
-        MDRaisedButton:
-            text: "Générer des déchets"
-            size_hint: 0.2, 0.1
-            pos_hint: {"center_x": 0.5}
-            on_release: root.generate_dechets()
-
-        MDRaisedButton:
-            text: "Retour à l'accueil"
-            size_hint: 0.2, 0.1
-            pos_hint: {"center_x": 0.5}
-            on_release: app.root.current = "accueil"
 
 <RobotScreen>:
     name: "robot"
-
-    MDBoxLayout:
-        orientation: 'horizontal'
-        padding: dp(20)
-        spacing: dp(10)
-
-        MDCard:
-            elevation: 8
-            radius: dp(15)
-            size_hint: 0.2, None
-            height: dp(150)
-            MDLabel:
-                text: "Robot connecté"
-                halign: "center"
-
-        # Partie droite : Formulaire de connexion
+    MDScreen:
         MDBoxLayout:
-            orientation: 'vertical'
-            size_hint_x: 0.4
+            orientation: "horizontal"
             padding: dp(20)
             spacing: dp(10)
+    
+            # Image du robot ; dans KivyMD, vous pouvez utiliser FitImage ou Image
+            Image:
+                source: "assets/robot/robot2.jpg"
+                size_hint_x: 0.2  # Occupe 20% de la largeur
+    
+            # Partie droite : Formulaire de connexion
+            MDBoxLayout:
+                orientation: "vertical"
+                size_hint_x: 0.4  # Occupe 40% de la largeur
+                padding: dp(20)
+                spacing: dp(10)
+    
+                MDLabel:
+                    text: "Connexion au Robot"
+                    font_style: "H5"
+                    size_hint_y: 0.2
+                    halign: "center"
+    
+                MDBoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: 0.6
+                    spacing: dp(10)
+    
+                    MDLabel:
+                        text: "Adresse IP :"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        halign: "right"
+                    MDTextField:
+                        id: ip_input
+                        hint_text: "Entrez l'adresse IP"
+                        multiline: False
+                        size_hint_y: None
+                        height: dp(40)
+    
+                    MDLabel:
+                        text: "Port COM :"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        halign: "right"
+                    MDTextField:
+                        id: port_input
+                        hint_text: "Entrez le port COM"
+                        multiline: False
+                        size_hint_y: None
+                        height: dp(40)
+    
+                MDLabel:
+                    id: status_label
+                    text: "Statut : Déconnecté"
+                    size_hint_y: 0.15
+                    font_style: "Subtitle1"
+                    theme_text_color: "Custom"
+                    text_color: 1, 0, 0, 1
+                    halign: "center"
+    
+                MDRaisedButton:
+                    text: "Connecter"
+                    size_hint_y: 0.2
+                    on_release: root.connect_robot(ip_input.text, port_input.text)
+    
+                MDRaisedButton:
+                    text: "Retour à l'accueil"
+                    size_hint_y: 0.2
+                    on_release: app.root.current = "accueil"
 
-            MDLabel:
-                text: "Connexion au Robot"
-                font_style: "H5"
-                halign: "center"
-
-            MDTextField:
-                id: ip_input
-                hint_text: "Entrez l'adresse IP"
-
-            MDTextField:
-                id: port_input
-                hint_text: "Entrez le port COM"
-
-            MDLabel:
-                id: status_label
-                text: "Statut : Déconnecté"
-                theme_text_color: "Error"
-
-            MDRaisedButton:
-                text: "Connecter"
-                on_release: root.connect_robot(ip_input.text, port_input.text)
-
-            MDRaisedButton:
-                text: "Retour à l'accueil"
-                on_release: app.root.current = "accueil"
 
 <OptionsScreen>:
     name: "options"
-
-    MDBoxLayout:
-        orientation: "vertical"
-        padding: dp(20)
-        spacing: dp(10)
-
-        MDLabel:
-            text: "Options et Paramètres"
-            font_style: "H5"
-            halign: "center"
-
-        MDGridLayout:
-            cols: 2
+    MDScreen:
+        MDBoxLayout:
+            orientation: "vertical"
+            padding: dp(20)
             spacing: dp(10)
-
+    
             MDLabel:
-                text: "Nombre de déchets :"
-                halign: "right"
-            MDTextField:
-                id: nb_dechets
-                hint_text: "Entrez le nombre"
-
-            MDLabel:
-                text: "Largeur de la plage (m) :"
-                halign: "right"
-            MDTextField:
-                id: largeur_plage
-                hint_text: "Entrez la largeur"
-
-            MDLabel:
-                text: "Longueur de la plage (m) :"
-                halign: "right"
-            MDTextField:
-                id: longueur_plage
-                hint_text: "Entrez la longueur"
-
-            MDLabel:
-                text: "Taux de recyclage (%) :"
-                halign: "right"
-            MDTextField:
-                id: taux_recyclage
-                hint_text: "Entrez le taux"
-
-            MDLabel:
-                text: "Vitesse de simulation :"
-                halign: "right"
-            MDTextField:
-                id: vitesse_simulation
-                hint_text: "Entrez la vitesse"
-
-        MDRaisedButton:
-            text: "Enregistrer les paramètres"
-            size_hint_y: 0.1
-            on_release: root.enregistrer_parametres()
-
-        MDRaisedButton:
-            text: "Retour à l'accueil"
-            size_hint_y: 0.1
-            on_release: app.root.current = "accueil"
+                text: "Options et Paramètres"
+                font_style: "H5"
+                size_hint_y: 0.1
+                halign: "center"
+    
+            MDGridLayout:
+                cols: 2
+                spacing: dp(10)
+                size_hint_y: 0.8
+    
+                MDLabel:
+                    text: "Nombre de déchets :"
+                    halign: "right"
+                MDTextField:
+                    id: nb_dechets
+                    hint_text: "Entrez le nombre"
+                    multiline: False
+    
+                MDLabel:
+                    text: "Largeur de la plage (m) :"
+                    halign: "right"
+                MDTextField:
+                    id: largeur_plage
+                    hint_text: "Entrez la largeur"
+                    multiline: False
+    
+                MDLabel:
+                    text: "Longueur de la plage (m) :"
+                    halign: "right"
+                MDTextField:
+                    id: longueur_plage
+                    hint_text: "Entrez la longueur"
+                    multiline: False
+    
+                MDLabel:
+                    text: "Taux de recyclage (%) :"
+                    halign: "right"
+                MDTextField:
+                    id: taux_recyclage
+                    hint_text: "Entrez le taux"
+                    multiline: False
+    
+                MDLabel:
+                    text: "Vitesse de simulation :"
+                    halign: "right"
+                MDTextField:
+                    id: vitesse_simulation
+                    hint_text: "Entrez la vitesse"
+                    multiline: False
+    
+                MDLabel:
+                    text: "Mode avancé :"
+                    halign: "right"
+                MDSwitch:
+                    id: mode_avance
+    
+            MDRaisedButton:
+                text: "Enregistrer les paramètres"
+                size_hint_y: 0.1
+                on_release: root.enregistrer_parametres()
+    
+            MDRaisedButton:
+                text: "Retour à l'accueil"
+                size_hint_y: 0.1
+                on_release: app.root.current = "accueil"

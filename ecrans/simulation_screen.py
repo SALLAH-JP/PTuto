@@ -4,16 +4,12 @@ from kivy.core.window import Window
 from kivy.clock import Clock
 from kivy.graphics import Rectangle, Color
 
-# Importations depuis KivyMD pour bénéficier du style Material Design
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.screen import MDScreen
 
 class SimulationWidget(MDBoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        # Organisation en layout si besoin (vertical, horizontal, etc.)
-        self.orientation = "vertical"
-
         self.dechets = []
         self.dechets_ratio = []
         self.robot_ratio = (0, 0.5)

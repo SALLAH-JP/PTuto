@@ -7,8 +7,6 @@ from kivymd.uix.boxlayout import MDBoxLayout
 class AccueilWidget(MDBoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.orientation = "vertical"
-        # Vous pouvez définir ici d'autres propriétés (padding, spacing, etc.) si besoin.
 
     def on_simuler_pressed(self):
         """Vérifie si un robot est connecté et ouvre un MDDialog si aucun n'est trouvé."""

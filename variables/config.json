@@ -1,10 +1,10 @@
 {
-    "nb_dechets": "",
+    "nb_dechets": "10",
     "largeur_plage": "",
     "longueur_plage": "",
     "taux_recyclage": "",
     "vitesse_simulation": "",
-    "mode_avance": true,
+    "mode_avance": false,
     "ip": "192.168.0.1",
     "port": "COM3",
     "robot_connect": false
