@@ -1,0 +1,216 @@
+<MyScreenManager>:
+    AccueilScreen:
+    SimulationScreen:
+    RobotScreen:
+    OptionsScreen:
+
+<AccueilScreen>:
+    name: "accueil"
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: 20
+        padding: 50
+
+        canvas.before:
+            Rectangle:
+                source: "assets/backgrounds/background.jpg"
+                pos: self.pos
+                size: self.size
+
+        Label:
+            text: "Bienvenue sur le Simulateur de Robot"
+            font_size: "32sp"
+            color: 1, 1, 1, 1
+
+        Button:
+            text: "Démarrer la simulation"
+            size_hint: (0.6, 0.15)
+            pos_hint: {"center_x": 0.5}
+            on_release: root.on_simuler_pressed()
+        Button:
+            text: "Connecter un robot"
+            size_hint: (0.6, 0.15)
+            pos_hint: {"center_x": 0.5}
+            on_release: app.root.current = "robot"
+        Button:
+            text: "Options et paramètres"
+            size_hint: (0.6, 0.15)
+            pos_hint: {"center_x": 0.5}
+            on_release: app.root.current = "options"
+
+<SimulationScreen>:
+    name: "simulation"
+
+    canvas.before:
+        Rectangle:
+            source: "assets/backgrounds/plage.jpg"
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: 20
+        spacing: 10
+
+        Widget:
+            id: simulation_widget
+
+        Button:
+            text: "Générer des déchets"
+            size_hint: 0.2, 0.1
+            pos_hint: {"center_x": 0.5}
+            on_release: root.generate_dechets()
+        Button:
+            text: "Retour à l'accueil"
+            size_hint: 0.2, 0.1
+            pos_hint: {"center_x": 0.5}
+            on_release: app.root.current = "accueil"
+
+<RobotScreen>:
+    name: "robot"
+
+    BoxLayout:
+        orientation: 'horizontal'
+        padding: 20
+        spacing: 10
+        
+        Image:
+            source: "assets/robot/robot2.jpg"   # Chemin vers l'image du robot
+            size_hint_x: 0.2                     # Occupe 20% de la largeur
+
+        # Partie droite : Formulaire de connexion
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_x: 0.4                     # Occupe les 40% restants
+            padding: dp(20)
+            spacing: dp(10)
+
+            Label:
+                text: "Connexion au Robot"
+                font_size: '24sp'
+                size_hint_y: 0.2
+
+            # Conteneur du formulaire
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint_y: 0.6
+                spacing: dp(10)
+
+                # Champ pour l'adresse IP
+                Label:
+                    text: "Adresse IP :"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                TextInput:
+                    id: ip_input
+                    multiline: False
+                    hint_text: "Entrez l'adresse IP"
+                    size_hint_y: None
+                    height: dp(40)
+
+                # Champ pour le port COM
+                Label:
+                    text: "Port COM :"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                TextInput:
+                    id: port_input
+                    multiline: False
+                    hint_text: "Entrez le port COM"
+                    size_hint_y: None
+                    height: dp(40)
+
+            # Label d'état de la connexion
+            Label:
+                id: status_label
+                text: "Statut : Déconnecté"
+                size_hint_y: 0.15
+                font_size: '18sp'
+                color: 1, 0, 0, 1
+
+            # Bouton de connexion
+            Button:
+                text: "Connecter"
+                size_hint_y: 0.2
+                on_press: root.connect_robot(ip_input.text, port_input.text)
+            Button:
+                text: "Retour à l'accueil"
+                size_hint_y: 0.2
+                on_press: app.root.current = "accueil"
+
+<OptionsScreen>:
+    name: "options"
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(20)
+        spacing: dp(10)
+
+        # Entête de l'écran
+        Label:
+            text: "Options et Paramètres"
+            font_size: "24sp"
+            size_hint_y: 0.1
+
+        # Formulaire sous forme de grille
+        GridLayout:
+            cols: 2
+            spacing: dp(10)
+            size_hint_y: 0.8
+
+            # Champ pour le nombre de déchets
+            Label:
+                text: "Nombre de déchets :"
+                halign: "right"
+            TextInput:
+                id: nb_dechets
+                multiline: False
+
+            # Champ pour la largeur de la plage
+            Label:
+                text: "Largeur de la plage (m) :"
+                halign: "right"
+            TextInput:
+                id: largeur_plage
+                multiline: False
+
+            # Champ pour la longueur de la plage
+            Label:
+                text: "Longueur de la plage (m) :"
+                halign: "right"
+            TextInput:
+                id: longueur_plage
+                multiline: False
+
+            # Champ supplémentaire : Taux de recyclage
+            Label:
+                text: "Taux de recyclage (%) :"
+                halign: "right"
+            TextInput:
+                id: taux_recyclage
+                multiline: False
+
+            # Champ supplémentaire : Vitesse de simulation
+            Label:
+                text: "Vitesse de simulation :"
+                halign: "right"
+            TextInput:
+                id: vitesse_simulation
+                multiline: False
+
+            # Exemple d'un paramètre sous forme de switch (activer/désactiver un mode)
+            Label:
+                text: "Mode avancé :"
+                halign: "right"
+            Switch:
+                id: mode_avance
+
+        # Bouton pour enregistrer/appliquer les paramètres
+        Button:
+            text: "Enregistrer les paramètres"
+            size_hint_y: 0.1
+            on_press: root.enregistrer_parametres()
+        Button:
+            text: "Retour à l'accueil"
+            size_hint_y: 0.1
+            on_press: app.root.current = "accueil"
