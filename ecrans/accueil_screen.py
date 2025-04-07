@@ -17,8 +17,9 @@ class AccueilWidget(Widget):
         """Vérifie si un robot est connecté et ouvre un Popup si aucun n'est trouvé."""
         conf = load_config()
 
-        if not conf["robot_connect"]:
-            self.afficher_popup()
+        if not conf["robot_connect"]: self.afficher_popup()
+
+        else: self.parent.manager.current = "simulation"
 
     def afficher_popup(self):
         """Affiche un Popup pour avertir l'utilisateur et lui proposer de jouer."""
@@ -49,7 +50,7 @@ class AccueilWidget(Widget):
         """Action lorsque l'utilisateur choisit de jouer en mode simulation."""
         
         popup.dismiss()
-        self.parent.manager.current = "simulation"
+        self.parent.manager.current = "jeu"
 
 
 class AccueilScreen(Screen):

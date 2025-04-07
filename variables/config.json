@@ -7,5 +7,5 @@
     "mode_avance": false,
     "ip": "192.168.0.1",
     "port": "COM3",
-    "robot_connect": false
+    "robot_connect": true
 }

@@ -1,5 +1,6 @@
 <MyScreenManager>:
     AccueilScreen:
+    JeuScreen
     SimulationScreen:
     RobotScreen:
     OptionsScreen:
@@ -38,8 +39,8 @@
             pos_hint: {"center_x": 0.5}
             on_release: app.root.current = "options"
 
-<SimulationScreen>:
-    name: "simulation"
+<JeuScreen>:
+    name: "jeu"
 
     BoxLayout:
         orientation: "vertical"
@@ -53,13 +54,41 @@
                 size: self.size
 
         Widget:
-            id: simulation_widget
+            id: jeu_widget
 
         Button:
             text: "Générer des déchets"
             size_hint: 0.2, 0.1
             pos_hint: {"center_x": 0.5}
             on_release: root.generate_dechets()
+        Button:
+            text: "Retour à l'accueil"
+            size_hint: 0.2, 0.1
+            pos_hint: {"center_x": 0.5}
+            on_release: app.root.current = "accueil"
+
+<SimulationScreen>:
+    name: "simulation"
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: 20
+        spacing: 10
+
+        canvas.before:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: "assets/backgrounds/plage.jpg"
+
+        Label:
+            text: "Bienvenue dans le Jeu !"
+            size_hint_y: None
+            height: 50
+
+        Widget:
+            id: simulation_widget
+
         Button:
             text: "Retour à l'accueil"
             size_hint: 0.2, 0.1

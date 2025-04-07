@@ -15,8 +15,7 @@ class RobotWidget(Widget):
         Clock.schedule_once(lambda dt: self._simulate_connection(robot_ip, robot_port), 2)
 
     def _simulate_connection(self, ip, port):
-        # Simuler le résultat de la connexion
-        # Par exemple, la connexion réussit si le port est "COM3"
+
         if port.upper() == "COM3":
             self.parent.ids.status_label.text = "Connexion établie avec succès."
             self.parent.ids.status_label.color = (0, 1, 0, 1)  # Vert pour succès
