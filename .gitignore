@@ -1,3 +1,4 @@
 *.pyc
 /variables/__pycache__
 /ecran/__pycache__
+/kivy-readthedocs-io-en-latest.pdf

@@ -1,3 +1,4 @@
+import serial
 from kivy.uix.widget import Widget
 from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
@@ -6,22 +7,68 @@ class RobotWidget(Widget):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def connect_robot(self, robot_ip, robot_port):
-        """Méthode pour simuler la connexion au robot."""
-        self.parent.ids.status_label.text = f"Connexion en cours à {robot_ip}:{robot_port}..."
-        self.parent.ids.status_label.color = (1, 0.65, 0, 1)  # Orange pour indiquer l'action en cours
+    def connect_usb(self, port, baudrate=115200):
+        try:
+            self.ser = serial.Serial(port, baudrate, timeout=1)
+            self._update_status(f"USB: ouverture de {port}@{baudrate}", True)
+            # Envoi d'un ping et lecture de la réponse
+            Clock.schedule_once(lambda dt: self._test_usb(), 0.5)
+        except serial.SerialException as e:
+            self._update_status(f"USB Error: {e}", success=False)
 
-        # Simulation d'une tentative de connexion après 2 secondes
-        Clock.schedule_once(lambda dt: self._simulate_connection(robot_ip, robot_port), 2)
+    def _test_usb(self):
+        try:
+            self.ser.write(b'PING\n')
+            resp = self.ser.readline().decode().strip()
+            if resp == 'PONG':
+                self._update_status("USB connecté ✔️", True)
+            else:
+                self._update_status(f"USB: réponse inattendue « {resp} »", False)
+        except Exception as e:
+            self._update_status(f"USB comm error: {e}", False)
 
-    def _simulate_connection(self, ip, port):
+    def connect_bluetooth(self, address):
+        try:
+            # Si aucune adresse fournie, on cherche un appareil nommé "robot"
+            if not address:
+                nearby = bluetooth.discover_devices(duration=8, lookup_names=True)
+                for addr, name in nearby:
+                    if 'robot' in name.lower():
+                        address = addr
+                        break
+                if not address:
+                    return self._update_status("Aucun robot BT trouvé", False)
 
-        if port.upper() == "COM3":
-            self.parent.ids.status_label.text = "Connexion établie avec succès."
-            self.parent.ids.status_label.color = (0, 1, 0, 1)  # Vert pour succès
-        else:
-            self.parent.ids.status_label.text = "Échec de la connexion."
-            self.parent.ids.status_label.color = (1, 0, 0, 1)  # Rouge pour échec
+            self.bt_sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
+            self.bt_sock.connect((address, 1))
+            self.bt_sock.send("PING\n".encode())
+            resp = self.bt_sock.recv(1024).decode().strip()
+            if resp == 'PONG':
+                self._update_status("Bluetooth connecté ✔️", True)
+            else:
+                self._update_status(f"BT: réponse inattendue « {resp} »", False)
+        except Exception as e:
+            self._update_status(f"BT Error: {e}", False)
+
+    def connect_wifi(self, ip, port=5000):
+        try:
+            self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.sock.settimeout(3)
+            self.sock.connect((ip, port))
+            self.sock.sendall(b'PING\n')
+            resp = self.sock.recv(1024).decode().strip()
+            if resp == 'PONG':
+                self._update_status("Wi‑Fi connecté ✔️", True)
+            else:
+                self._update_status(f"Wi‑Fi: réponse inattendue « {resp} »", False)
+        except Exception as e:
+            self._update_status(f"Wi‑Fi Error: {e}", False)
+
+    def _update_status(self, message, success=True):
+        lbl = self.parent.ids.get('status_label')
+        if lbl:
+            lbl.text = message
+            lbl.color = (0,1,0,1) if success else (1,0,0,1)
 
 
 class RobotScreen(Screen):
@@ -30,5 +77,11 @@ class RobotScreen(Screen):
         self.robot_widget = RobotWidget()
         self.add_widget(self.robot_widget)
 
-    def connect_robot(self, robot_ip, robot_port):
-        self.robot_widget.connect_robot(robot_ip, robot_port)
+    def connect_usb(self, port):
+        self.robot_widget.connect_usb(port)
+
+    def connect_bluetooth(self, address):
+        self.robot_widget.connect_bluetooth(address)
+
+    def connect_wifi(self, ip, port):
+        self.robot_widget.connect_wifi(ip, port)

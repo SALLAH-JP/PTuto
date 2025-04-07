@@ -100,72 +100,127 @@
 
     BoxLayout:
         orientation: 'horizontal'
-        padding: 20
-        spacing: 10
-        
-        Image:
-            source: "assets/robot/robot2.jpg"   # Chemin vers l'image du robot
-            size_hint_x: 0.2                     # Occupe 20% de la largeur
+        padding: dp(20)
+        spacing: dp(10)
 
-        # Partie droite : Formulaire de connexion
+        # Partie gauche : Conteneur vertical pour l'image et le bouton
         BoxLayout:
             orientation: 'vertical'
-            size_hint_x: 0.4                     # Occupe les 40% restants
-            padding: dp(20)
+            size_hint_x: 0.3   # Occupe 30% de la largeur totale
             spacing: dp(10)
 
-            Label:
-                text: "Connexion au Robot"
-                font_size: '24sp'
-                size_hint_y: 0.2
-
-            # Conteneur du formulaire
-            BoxLayout:
-                orientation: 'vertical'
-                size_hint_y: 0.6
-                spacing: dp(10)
-
-                # Champ pour l'adresse IP
-                Label:
-                    text: "Adresse IP :"
-                    size_hint_y: None
-                    height: self.texture_size[1]
-                TextInput:
-                    id: ip_input
-                    multiline: False
-                    hint_text: "Entrez l'adresse IP"
-                    size_hint_y: None
-                    height: dp(40)
-
-                # Champ pour le port COM
-                Label:
-                    text: "Port COM :"
-                    size_hint_y: None
-                    height: self.texture_size[1]
-                TextInput:
-                    id: port_input
-                    multiline: False
-                    hint_text: "Entrez le port COM"
-                    size_hint_y: None
-                    height: dp(40)
-
-            # Label d'état de la connexion
+            # Label de statut global
             Label:
                 id: status_label
-                text: "Statut : Déconnecté"
-                size_hint_y: 0.15
-                font_size: '18sp'
-                color: 1, 0, 0, 1
+                text: ''
+                size_hint_y: None
+                height: dp(30)
+                color: 1,1,1,1
 
-            # Bouton de connexion
-            Button:
-                text: "Connecter"
-                size_hint_y: 0.2
-                on_press: root.connect_robot(ip_input.text, port_input.text)
+            
+            Image:
+                source: "assets/robot/robot2.jpg"
+                size_hint_y: 1
+            
             Button:
                 text: "Retour à l'accueil"
-                size_hint_y: 0.2
-                on_press: app.root.current = "accueil"
+                size_hint_y: None
+                height: dp(50)
+                on_release: app.root.current = "accueil"  # Retourne à l'écran d'accueil
+
+        # Partie droite : Onglets pour les connexions
+        TabbedPanel:
+            do_default_tab: False  # Supprime le premier onglet par défaut
+            tab_pos: 'top_mid'
+            tab_width: 200
+
+            TabbedPanelItem:
+                text: "USB"
+                BoxLayout:
+                    orientation: 'vertical'
+                    padding: dp(20)
+                    spacing: dp(10)
+
+                    Label:
+                        text: "Connexion USB"
+                        font_size: '24sp'
+                        size_hint_y: None
+                        height: dp(50)
+
+                    Label:
+                        text: "Port COM :"
+                    TextInput:
+                        id: port_input
+                        hint_text: "Entrez le port COM"
+                        multiline: False
+                        size_hint_y: None
+                        height: dp(40)
+
+                    Button:
+                        text: "Connecter"
+                        on_release: root.connect_usb(port_input.text)
+
+            TabbedPanelItem:
+                text: "Bluetooth"
+                BoxLayout:
+                    orientation: 'vertical'
+                    padding: dp(20)
+                    spacing: dp(10)
+
+                    Label:
+                        text: "Connexion Bluetooth"
+                        font_size: '24sp'
+                        size_hint_y: None
+                        height: dp(50)
+
+                    Label:
+                        text: "Address MAC :"
+                    TextInput:
+                        id: address_input
+                        hint_text: "Entrez le port COM"
+                        multiline: False
+                        size_hint_y: None
+                        height: dp(40)
+
+                    Button:
+                        text: "Pairer"
+                        on_release: root.connect_bluetooth(address_input.text)
+
+            TabbedPanelItem:
+                text: "Wi-Fi"
+                BoxLayout:
+                    orientation: 'vertical'
+                    padding: dp(20)
+                    spacing: dp(10)
+
+                    Label:
+                        text: "Connexion Wi-Fi"
+                        font_size: '24sp'
+                        size_hint_y: None
+                        height: dp(50)
+
+                    Label:
+                        text: "Adresse IP :"
+                    TextInput:
+                        id: wifi_ip_input
+                        hint_text: "Entrez l'adresse IP"
+                        multiline: False
+                        size_hint_y: None
+                        height: dp(40)
+
+                    Label:
+                        text: "Port :"
+                    TextInput:
+                        id: wifi_port_input
+                        hint_text: "Entrez le port"
+                        password: True
+                        multiline: False
+                        size_hint_y: None
+                        height: dp(40)
+
+                    Button:
+                        text: "Connecter"
+                        on_release: root.connect_wifi(wifi_ip_input.text, wifi_port_input.text)
 
 <OptionsScreen>:
     name: "options"

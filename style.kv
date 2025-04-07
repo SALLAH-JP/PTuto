@@ -1,4 +1,5 @@
 #:import dp kivy.metrics.dp
+#:import utils kivy.utils
 
 ##################################################################
 #                Styles Globaux pour une Interface Moderne       #
@@ -95,3 +96,20 @@
 
 <RedPopupButton@PopupButton>:
     background_color: 1, 0, 0, 1  # Pour le bouton "Non" ou pour signaler une action négative
+
+<TabbedPanel>:
+    tab_width: 180
+    tab_height: dp(50)
+    tab_border: (2, 2, 2, 2)
+    background_color: (1, 1, 1, .25) #50% translucent red
+    tab_color: 0.8, 0.8, 0.8, 1  # Couleur des onglets inactifs (gris clair)
+    tab_spacing: dp(50)
+
+<TabbedPanelItem>:
+    background_color: (1, 1, 1, .25) #50% translucent red
+    color: 0.2, 0.2, 0.2, 1       # Couleur du texte des onglets (gris foncé)
+    border: (10, 10, 10, 10)
+
+
+<TabbedPanelStrip>:
+    spacing: dp(20), 0
