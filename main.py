@@ -12,7 +12,7 @@ Builder.load_file('style.kv')
 
 # Définir les tailles minimales ici
 Window.minimum_width = 500
-Window.minimum_height = 375
+Window.minimum_height = 370
 
 
 class MyScreenManager(ScreenManager):
