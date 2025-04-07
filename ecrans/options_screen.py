@@ -1,5 +1,6 @@
 from kivy.uix.widget import Widget
 from kivy.uix.screenmanager import Screen
+from kivy.animation import Animation
 from variables.config_manager import *
 
 class OptionsWidget(Widget):
@@ -26,12 +27,43 @@ class OptionsWidget(Widget):
 
     def enregistrer_parametres(self):
 
-        modify_variable("nb_dechets", self.parent.ids.nb_dechets.text)
-        modify_variable("largeur_plage", self.parent.ids.largeur_plage.text)
-        modify_variable("longueur_plage", self.parent.ids.longueur_plage.text)
-        modify_variable("taux_recyclage", self.parent.ids.taux_recyclage.text)
-        modify_variable("vitesse_simulation", self.parent.ids.vitesse_simulation.text)
+        config = load_config()
+        
+        for index in [ "nb_dechets", "largeur_plage", "longueur_plage", "taux_recyclage", "vitesse_simulation"]:
+
+            value = self.parent.ids[index].text
+            if value == "" : value = config[index]
+
+            try:
+                value = int( value )
+
+                if value <= 0:
+                    raise ValueError("Toutes les valeurs doivent être positives.")
+
+            except ValueError as e:
+                self.show_temporary_message(str(e))
+                return
+
+        for index in [ "nb_dechets", "largeur_plage", "longueur_plage", "taux_recyclage", "vitesse_simulation"]:
+
+            value = self.parent.ids[index].text
+            if value == "" : value = config[index]
+            
+            modify_variable(index, value)
+
         modify_variable("mode_avance", self.parent.ids.mode_avance.active)
+
+
+
+    def show_temporary_message(self, message):
+        """Affiche un message temporaire avec animation."""
+        label = self.parent.ids.error_label
+        label.text = message
+
+        # Animation pour rendre le message visible et disparaître
+        anim = Animation(opacity=1, duration=0.5) + Animation(opacity=0, duration=2)
+        anim.start(label)
+
 
 
 class OptionsScreen(Screen):

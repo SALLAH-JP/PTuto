@@ -1,0 +1,97 @@
+#:import dp kivy.metrics.dp
+
+##################################################################
+#                Styles Globaux pour une Interface Moderne       #
+##################################################################
+
+# Style global pour les boutons
+<Button>:
+    background_normal: ""        # Désactive l'image de fond par défaut
+    background_color: 0, 0, 0, 0   # On souhaite utiliser uniquement le canvas pour le fond
+    font_size: "16sp"
+    color: 1, 1, 1, 1             # Texte en blanc
+    #size_hint: None, None
+    #size: dp(200), dp(50)
+    pos_hint: {"center_x": 0.5}
+    canvas.before:
+        Color:
+            rgba: 0.25, 0.5, 0.8, 1  # Couleur bleue moderne
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(12)]          # Coins arrondis
+
+# Style global pour les labels
+<Label>:
+    font_size: "18sp"
+    color: 0.1, 0.1, 0.1, 1       # Texte en gris foncé pour un bon contraste
+    halign: "center"
+    valign: "middle"
+
+# Style global pour les champs de texte (TextInput)
+<TextInput>:
+    font_size: "16sp"
+    foreground_color: 0, 0, 0, 1  # Texte en noir
+    background_color: 1, 1, 1, 1  # Fond blanc
+    padding: [dp(10), dp(10)]
+    multiline: False
+
+# Style global pour les BoxLayout (espacement et marges par défaut)
+<BoxLayout>:
+    spacing: dp(10)
+    padding: dp(10)
+
+############################################
+#           Style global pour les Screens  #
+############################################
+
+<Screen>:
+    canvas.before:
+        # Vous pouvez activer une image de fond en décommentant le Rectangle ci-dessous,
+        # ou utiliser une couleur unie pour un look épuré :
+        # Rectangle:
+        #     source: "assets/backgrounds/background.jpg"
+        #     pos: self.pos
+        #     size: self.size
+
+        Color:
+            rgba: 0.95, 0.95, 0.95, 1  # Fond gris très clair pour plus de modernité
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+
+<CustomPopup@Popup>:
+    size_hint: 0.6, 0.4
+    auto_dismiss: False
+    background: ""  # Désactive l'image de fond par défaut
+    background_color: 0.95, 0.95, 0.95, 1  # Fond gris très clair
+    title_color: 0.2, 0.2, 0.2, 1         # Titre en gris foncé
+    title_size: "20sp"
+    separator_color: 0.8, 0.8, 0.8, 1
+    canvas.before:
+        Color:
+            rgba: 0.95, 0.95, 0.95, 1
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(10)]  # Coins arrondis pour une apparence moderne
+
+<PopupButton@Button>:
+    background_normal: ""   # On désactive l'image par défaut
+    font_size: "16sp"
+    color: 1, 1, 1, 1        # Texte en blanc
+    size_hint: None, None
+    size: dp(120), dp(40)
+    pos_hint: {"center_x": 0.5}
+    canvas.before:
+        Color:
+            # Utilise background_color s'il est défini, sinon une couleur par défaut
+            rgba: self.background_color if self.background_color != [0, 0, 0, 0] else (0.25, 0.5, 0.8, 1)
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(8)]  # Coins arrondis
+
+<RedPopupButton@PopupButton>:
+    background_color: 1, 0, 0, 1  # Pour le bouton "Non" ou pour signaler une action négative

@@ -16,20 +16,24 @@ class SimulationWidget(Widget):
         self.robot_ratio = (0, 0.5)
         self.dechet_size = (100, 100)
 
-        with self.canvas:
-            Color(1, 1, 1, 1)
-            self.robot = Rectangle(
-                source="assets/robot/robot.jpg",
-                pos=(0, self.center_y - 25),
-                size=(50, 50)
-            )
-
         # Met à jour la position du robot si la fenêtre est redimensionnée
         self.bind(height=self.update_robot_position, width=self.update_robot_position)
         self.bind(height=self.update_dechets_position, width=self.update_dechets_position)
-        Window.bind(on_key_down=self.on_key_down)
 
-    def generate_dechets(self, dt=None):
+    def generate_robot(self):
+
+        if not hasattr(self, 'robot'): #self.parent.ids.simulation_widget.canvas.remove(self.robot)
+
+            with self.parent.ids.simulation_widget.canvas:
+
+                Color(1, 1, 1, 1)
+                self.robot = Rectangle(
+                    source="assets/robot/robot.jpg",
+                    pos=(0, self.center_y - 25),
+                    size=(50, 50)
+                )
+
+    def generate_dechets(self):
 
         self.clear_dechets()
 
@@ -41,7 +45,7 @@ class SimulationWidget(Widget):
             random_x = random.randint(0, int(self.width - self.dechet_size[0]))
             random_y = random.randint(0, int(self.height - self.dechet_size[1]))
 
-            with self.canvas:
+            with self.parent.ids.simulation_widget.canvas:
                 dechet = Rectangle(
                     source="assets/dechets/dechet.png",
                     pos=(random_x, random_y),
@@ -55,7 +59,7 @@ class SimulationWidget(Widget):
     def clear_dechets(self):
         """Efface les anciens déchets du canvas."""
         for dechet in self.dechets:
-            self.canvas.remove(dechet)
+            self.parent.ids.simulation_widget.canvas.remove(dechet)
         self.dechets = []
         self.dechets_ratio = []
 
@@ -110,4 +114,12 @@ class SimulationScreen(Screen):
         self.simulation_widget.generate_dechets()
 
     def on_pre_enter(self):
-        Clock.schedule_once(self.simulation_widget.generate_dechets, 0.1)
+        self.simulation_widget.generate_robot()
+
+    def on_enter(self):
+        self.simulation_widget.generate_dechets()
+        Window.bind(on_key_down=self.simulation_widget.on_key_down)
+
+    def on_leave(self):
+        Window.unbind(on_key_down=self.simulation_widget.on_key_down)
+

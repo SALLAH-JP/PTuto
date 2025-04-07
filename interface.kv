@@ -41,16 +41,16 @@
 <SimulationScreen>:
     name: "simulation"
 
-    canvas.before:
-        Rectangle:
-            source: "assets/backgrounds/plage.jpg"
-            pos: self.pos
-            size: self.size
-
     BoxLayout:
         orientation: "vertical"
         padding: 20
         spacing: 10
+
+        canvas.before:
+            Rectangle:
+                source: "assets/backgrounds/plage.jpg"
+                pos: self.pos
+                size: self.size
 
         Widget:
             id: simulation_widget
@@ -204,6 +204,14 @@
                 halign: "right"
             Switch:
                 id: mode_avance
+
+            Label:
+                id: error_label
+                text: ""
+                color: 1, 0, 0, 1  # Texte rouge pour signaler une erreur
+                font_size: "14sp"
+                opacity: 0  # Caché par défaut
+
 
         # Bouton pour enregistrer/appliquer les paramètres
         Button:

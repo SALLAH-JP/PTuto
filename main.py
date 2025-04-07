@@ -8,6 +8,7 @@ from kivy.core.window import Window
 from kivy.lang import Builder
 
 Builder.load_file('interface.kv')
+Builder.load_file('style.kv')
 
 # Définir les tailles minimales ici
 Window.minimum_width = 500
@@ -21,7 +22,7 @@ class MainApp(App):
     def build(self):
 
         sm = MyScreenManager()
-        sm.current = 'accueil'
+        sm.current = 'accueil'  # Démarre sur l'écran d'accueil
         return sm
 
 if __name__ == "__main__":
