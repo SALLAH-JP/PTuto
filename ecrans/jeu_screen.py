@@ -11,6 +11,8 @@ from kivy.clock import Clock
 class JeuWidget(Widget):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.nb_dechets = 10
+        self.score_dechet = 0
         self.dechets = []
         self.dechets_ratio = []
         self.robot_ratio = (0, 0.5)
@@ -29,21 +31,18 @@ class JeuWidget(Widget):
                 Color(1, 1, 1, 1)
                 self.robot = Rectangle(
                     source="assets/robot/robot.jpg",
-                    pos=(0, self.center_y - 25),
+                    pos=(0, self.center_y),
                     size=(50, 50)
                 )
 
-    def generate_dechets(self):
+    def generate_dechets(self, nb_dechets=10):
 
         self.clear_dechets()
 
-        config = load_config()
-        nb_dechets = int( config["nb_dechets"] )
-
         for _ in range(nb_dechets):
             # Position aléatoire dans la zone graphique
-            random_x = random.randint(0, int(self.width - self.dechet_size[0]))
-            random_y = random.randint(0, int(self.height - self.dechet_size[1]))
+            random_x = random.randint(0, int(self.parent.ids.jeu_widget.width))
+            random_y = random.randint(0, int(self.parent.ids.jeu_widget.height))
 
             with self.parent.ids.jeu_widget.canvas:
                 dechet = Rectangle(
@@ -94,13 +93,57 @@ class JeuWidget(Widget):
             current_y += step
         elif key == 274:  # Flèche bas
             current_y -= step
+        elif key == 32:  # Code de la barre d'espace
+            self.ramasser_dechet()
+
 
         # Assure que le robot reste dans les limites de l'écran
-        current_x = max(0, min(self.width - self.robot.size[0], current_x))
-        current_y = max(0, min(self.height - self.robot.size[1], current_y))
+        current_x = max(0, min(self.width, current_x))
+        current_y = max(0, min(self.height, current_y))
 
         self.robot.pos = (current_x, current_y)
         self.robot_ratio = ( current_x/self.width, current_y/self.height )
+
+    def load_level(self, text):
+
+        self.score_dechet = 0
+        self.parent.ids.jeu_widget.canvas.remove(self.robot)
+        with self.parent.ids.jeu_widget.canvas:
+
+            Color(1, 1, 1, 1)
+            self.robot = Rectangle(
+                source="assets/robot/robot.jpg",
+                pos=(0, self.center_y),
+                size=(50, 50)
+            )
+
+        if text == 'Niveau 1': self.nb_dechets = 10
+        elif text == 'Niveau 2': self.nb_dechets = 20
+        elif text == 'Niveau 3': self.nb_dechets = 30
+
+        self.parent.ids.score_label.text = f"Score: {self.score_dechet}/{self.nb_dechets}"
+        self.generate_dechets(self.nb_dechets)
+
+    def ramasser_dechet(self):
+        """Ramasse un déchet si le robot est au-dessus."""
+        robot_x, robot_y = self.robot.pos
+        robot_width, robot_height = self.robot.size
+        
+        for dechet in self.dechets[:]:  # Parcourir une copie pour modifier la liste
+            dechet_x, dechet_y = dechet.pos
+            dechet_width, dechet_height = dechet.size
+            
+            # Vérifie si le robot est au-dessus du déchet
+            if (robot_x < dechet_x + dechet_width and
+                robot_x + robot_width > dechet_x and
+                robot_y < dechet_y + dechet_height and
+                robot_y + robot_height > dechet_y):
+
+                self.parent.ids.jeu_widget.canvas.remove(dechet)
+                self.dechets.remove(dechet)
+
+                self.score_dechet += 1
+                self.parent.ids.score_label.text = f"Score: {self.score_dechet}/{self.nb_dechets}"
 
 
 
@@ -109,15 +152,22 @@ class JeuScreen(Screen):
         super().__init__(**kwargs)
         self.jeu_widget = JeuWidget()
         self.add_widget(self.jeu_widget)
+        self.first_time = True
 
     def generate_dechets(self):
         self.jeu_widget.generate_dechets()
+
+    def load_level(self, text):
+        self.jeu_widget.load_level(text)
 
     def on_pre_enter(self):
         self.jeu_widget.generate_robot()
 
     def on_enter(self):
-        self.jeu_widget.generate_dechets()
+        if self.first_time:
+            self.first_time = False
+            self.jeu_widget.generate_dechets()
+
         Window.bind(on_key_down=self.jeu_widget.on_key_down)
 
     def on_leave(self):

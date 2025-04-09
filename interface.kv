@@ -1,6 +1,6 @@
 <MyScreenManager>:
     AccueilScreen:
-    JeuScreen
+    JeuScreen:
     SimulationScreen:
     RobotScreen:
     OptionsScreen:
@@ -9,63 +9,99 @@
     name: "accueil"
     BoxLayout:
         orientation: 'vertical'
-        spacing: 20
-        padding: 50
 
-        canvas.before:
-            Rectangle:
-                source: "assets/backgrounds/background.jpg"
-                pos: self.pos
-                size: self.size
+        BoxLayout:
+            orientation: 'vertical'
 
-        Label:
-            text: "Bienvenue sur le Simulateur de Robot"
-            font_size: "32sp"
-            color: 1, 1, 1, 1
+            canvas.before:
+                Rectangle:
+                    source: "assets/backgrounds/background.jpg"
+                    pos: self.pos
+                    size: self.size
 
-        Button:
-            text: "Démarrer la simulation"
-            size_hint: (0.6, 0.15)
-            pos_hint: {"center_x": 0.5}
-            on_release: root.on_simuler_pressed()
-        Button:
-            text: "Connecter un robot"
-            size_hint: (0.6, 0.15)
-            pos_hint: {"center_x": 0.5}
-            on_release: app.root.current = "robot"
-        Button:
-            text: "Options et paramètres"
-            size_hint: (0.6, 0.15)
-            pos_hint: {"center_x": 0.5}
-            on_release: app.root.current = "options"
+            Label:
+                text: "Bienvenue sur le Simulateur de Robot"
+                font_size: "32sp"
+                color: 1, 1, 1, 1
+
+            ButtonIcon
+                text: "Démarrer la simulation"
+                icon_source: "assets/icones/icone_plage.png"
+                size_hint: (0.4, 0.15)
+                pos_hint: {"center_x": 0.5}
+                on_release: root.on_simuler_pressed()
+
+            ButtonIcon:
+                text: "Connecter un robot"
+                icon_source: "assets/icones/robot.png"
+                size_hint: (0.4, 0.15)
+                pos_hint: {"center_x": 0.5}
+                on_release: app.root.current = "robot"
+
+
+            ButtonIcon:
+                icon_source: "assets/icones/icone_option.png"
+                text: "Options et paramètres"
+                size_hint: (0.4, 0.15)
+                pos_hint: {"center_x": 0.5}
+                on_release: app.root.current = "options"
 
 <JeuScreen>:
     name: "jeu"
 
     BoxLayout:
         orientation: "vertical"
-        padding: 20
-        spacing: 10
 
-        canvas.before:
-            Rectangle:
-                source: "assets/backgrounds/plage.jpg"
-                pos: self.pos
-                size: self.size
+        BoxLayout:
+            size_hint_y: 0.1125
+            padding: dp(5)
+            spacing: dp(10)
+            canvas.before:
+                Color:
+                    rgba: 0.2, 0.2, 0.2, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(10)]
 
-        Widget:
-            id: jeu_widget
+            ButtonIcon:
+                icon_source: "assets/icones/icone_home.png"
+                text: ""
+                size_hint: (0.4, 0.8)
+                pos_hint: {"center_y": 0.5}
+                on_release: app.root.current = "accueil"
 
-        Button:
-            text: "Générer des déchets"
-            size_hint: 0.2, 0.1
-            pos_hint: {"center_x": 0.5}
-            on_release: root.generate_dechets()
-        Button:
-            text: "Retour à l'accueil"
-            size_hint: 0.2, 0.1
-            pos_hint: {"center_x": 0.5}
-            on_release: app.root.current = "accueil"
+            Label:
+                id: score_label
+                text: "Score: 0/10"
+                font_size: '20sp'
+            Label:
+                id: life_label
+                text: "Vies: 3"
+                font_size: '20sp'
+
+            Spinner:
+                id: level_spinner
+                text: "Niveau 1"
+                values: ["Niveau 1", "Niveau 2", "Niveau 3"]
+                size_hint: (None, None)
+                size: dp(120), dp(40)
+                pos_hint: {"center_y": 0.5}
+                # Lorsqu'on change le choix, on lance le chargement du niveau
+                on_text: root.load_level(self.text)
+
+
+        BoxLayout:
+            canvas.before:
+                Rectangle:
+                    source: "assets/backgrounds/plage.jpg"
+                    pos: self.pos
+                    size: self.size
+
+            Widget:
+                id: jeu_widget
+
+            
 
 <SimulationScreen>:
     name: "simulation"
@@ -89,9 +125,10 @@
         Widget:
             id: simulation_widget
 
-        Button:
-            text: "Retour à l'accueil"
-            size_hint: 0.2, 0.1
+        ButtonIcon:
+            icon_source: "assets/icones/icone_home.png"
+            text: "Accueil"
+            size_hint: (0.4, 0.15)
             pos_hint: {"center_x": 0.5}
             on_release: app.root.current = "accueil"
 
@@ -117,110 +154,135 @@
                 height: dp(30)
                 color: 1,1,1,1
 
-            
             Image:
                 source: "assets/robot/robot2.jpg"
                 size_hint_y: 1
             
-            Button:
-                text: "Retour à l'accueil"
-                size_hint_y: None
-                height: dp(50)
+            ButtonIcon:
+                icon_source: "assets/icones/icone_home.png"
+                text: "Accueil"
+                size_hint: (1, 0.15)
                 on_release: app.root.current = "accueil"  # Retourne à l'écran d'accueil
 
-        # Partie droite : Onglets pour les connexions
-        TabbedPanel:
-            do_default_tab: False  # Supprime le premier onglet par défaut
-            tab_pos: 'top_mid'
-            tab_width: 200
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: 0  # Suppression de l'espace entre les deux zones
 
-            TabbedPanelItem:
-                text: "USB"
-                BoxLayout:
-                    orientation: 'vertical'
-                    padding: dp(20)
-                    spacing: dp(10)
+            canvas.before:
+                Color:
+                    rgba: 0.5, 0.5, 0.5, 1  # Fond gris
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(10)]
 
-                    Label:
-                        text: "Connexion USB"
-                        font_size: '24sp'
-                        size_hint_y: None
-                        height: dp(50)
+            TabbedPanel:
+                do_default_tab: False  # Supprime le premier onglet par défaut
+                tab_pos: 'top_mid'
+                tab_width: 200
+                tab_height: dp(75)
 
-                    Label:
-                        text: "Port COM :"
-                    TextInput:
-                        id: port_input
-                        hint_text: "Entrez le port COM"
-                        multiline: False
-                        size_hint_y: None
-                        height: dp(40)
+                canvas.after:
+                    # Tracer une ligne noire entre les onglets et le contenu
+                    Color:
+                        rgba: 1, 1, 1, 1  # Couleur noire
+                    Line:
+                        points: [self.x, self.top - self.tab_height, self.right, self.top - self.tab_height]
+                        width: dp(1)
 
-                    Button:
-                        text: "Connecter"
-                        on_release: root.connect_usb(port_input.text)
 
-            TabbedPanelItem:
-                text: "Bluetooth"
-                BoxLayout:
-                    orientation: 'vertical'
-                    padding: dp(20)
-                    spacing: dp(10)
+                TabbedPanelItem:
+                    text: "USB"
+                    BoxLayout:
+                        orientation: 'vertical'
+                        padding: dp(20)
+                        spacing: dp(10)
 
-                    Label:
-                        text: "Connexion Bluetooth"
-                        font_size: '24sp'
-                        size_hint_y: None
-                        height: dp(50)
+                        Label:
+                            text: "Connexion USB"
+                            font_size: '24sp'
+                            size_hint_y: None
 
-                    Label:
-                        text: "Address MAC :"
-                    TextInput:
-                        id: address_input
-                        hint_text: "Entrez le port COM"
-                        multiline: False
-                        size_hint_y: None
-                        height: dp(40)
+                        Label:
+                            text: "Port COM :"
+                        TextInput:
+                            id: port_input
+                            hint_text: "Entrez le port COM"
+                            multiline: False
+                            size_hint_y: None
+                            height: dp(40)
 
-                    Button:
-                        text: "Pairer"
-                        on_release: root.connect_bluetooth(address_input.text)
+                        ButtonIcon:
+                            icon_source: "assets/icones/icone_link.png"
+                            size_hint: (0.4, 0.2)
+                            text: "Connecter"
+                            on_release: root.connect_usb(port_input.text)
 
-            TabbedPanelItem:
-                text: "Wi-Fi"
-                BoxLayout:
-                    orientation: 'vertical'
-                    padding: dp(20)
-                    spacing: dp(10)
+                TabbedPanelItem:
+                    text: "Bluetooth"
+                    BoxLayout:
+                        orientation: 'vertical'
+                        padding: dp(20)
+                        spacing: dp(10)
 
-                    Label:
-                        text: "Connexion Wi-Fi"
-                        font_size: '24sp'
-                        size_hint_y: None
-                        height: dp(50)
+                        Label:
+                            text: "Connexion Bluetooth"
+                            font_size: '24sp'
+                            size_hint_y: None
+                            height: dp(50)
 
-                    Label:
-                        text: "Adresse IP :"
-                    TextInput:
-                        id: wifi_ip_input
-                        hint_text: "Entrez l'adresse IP"
-                        multiline: False
-                        size_hint_y: None
-                        height: dp(40)
+                        Label:
+                            text: "Address MAC :"
+                        TextInput:
+                            id: address_input
+                            hint_text: "Entrez le port COM"
+                            multiline: False
+                            size_hint_y: None
+                            height: dp(40)
 
-                    Label:
-                        text: "Port :"
-                    TextInput:
-                        id: wifi_port_input
-                        hint_text: "Entrez le port"
-                        password: True
-                        multiline: False
-                        size_hint_y: None
-                        height: dp(40)
+                        ButtonIcon:
+                            icon_source: "assets/icones/icone_link.png"
+                            size_hint: (0.4, 0.2)
+                            text: "Pairer"
+                            on_release: root.connect_bluetooth(address_input.text)
 
-                    Button:
-                        text: "Connecter"
-                        on_release: root.connect_wifi(wifi_ip_input.text, wifi_port_input.text)
+                TabbedPanelItem:
+                    text: "Wi-Fi"
+                    BoxLayout:
+                        orientation: 'vertical'
+                        padding: dp(20)
+                        spacing: dp(10)
+
+                        Label:
+                            text: "Connexion Wi-Fi"
+                            font_size: '24sp'
+                            size_hint_y: None
+                            height: dp(50)
+
+                        Label:
+                            text: "Adresse IP :"
+                        TextInput:
+                            id: wifi_ip_input
+                            hint_text: "Entrez l'adresse IP"
+                            multiline: False
+                            size_hint_y: None
+                            height: dp(40)
+
+                        Label:
+                            text: "Port :"
+                        TextInput:
+                            id: wifi_port_input
+                            hint_text: "Entrez le port"
+                            password: True
+                            multiline: False
+                            size_hint_y: None
+                            height: dp(40)
+
+                        ButtonIcon:
+                            icon_source: "assets/icones/icone_link.png"
+                            size_hint: (0.4, 0.6)
+                            text: "Connecter"
+                            on_release: root.connect_wifi(wifi_ip_input.text, wifi_port_input.text)
 
 <OptionsScreen>:
     name: "options"
@@ -230,79 +292,101 @@
         padding: dp(20)
         spacing: dp(10)
 
-        # Entête de l'écran
-        Label:
-            text: "Options et Paramètres"
-            font_size: "24sp"
-            size_hint_y: 0.1
+        BoxLayout:
+            orientation: "vertical"
+            size_hint_y: 0.9      # Ajustez cette valeur selon vos besoins
 
-        # Formulaire sous forme de grille
-        GridLayout:
-            cols: 2
-            spacing: dp(10)
-            size_hint_y: 0.8
+            canvas.before:
+                Color:
+                    rgba: 0.5, 0.5, 0.5, 1  # Couleur de fond grise
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(10)] 
 
-            # Champ pour le nombre de déchets
+
+            # Entête de l'écran
             Label:
-                text: "Nombre de déchets :"
-                halign: "right"
-            TextInput:
-                id: nb_dechets
-                multiline: False
+                text: "Options et Paramètres"
+                font_size: "24sp"
+                size_hint_y: 0.1
+                padding: 20
 
-            # Champ pour la largeur de la plage
-            Label:
-                text: "Largeur de la plage (m) :"
-                halign: "right"
-            TextInput:
-                id: largeur_plage
-                multiline: False
+            # Formulaire sous forme de grille
+            GridLayout:
+                cols: 2
+                spacing: dp(10)
+                size_hint_y: 0.8
 
-            # Champ pour la longueur de la plage
-            Label:
-                text: "Longueur de la plage (m) :"
-                halign: "right"
-            TextInput:
-                id: longueur_plage
-                multiline: False
+                # Champ pour le nombre de déchets
+                Label:
+                    text: "Nombre de déchets :"
+                    font_size: '20sp'
+                    halign: "right"
+                TextInput:
+                    id: nb_dechets
+                    multiline: False
 
-            # Champ supplémentaire : Taux de recyclage
-            Label:
-                text: "Taux de recyclage (%) :"
-                halign: "right"
-            TextInput:
-                id: taux_recyclage
-                multiline: False
+                # Champ pour la largeur de la plage
+                Label:
+                    text: "Largeur de la plage (m) :"
+                    font_size: '20sp'
+                    halign: "right"
+                TextInput:
+                    id: largeur_plage
+                    multiline: False
 
-            # Champ supplémentaire : Vitesse de simulation
-            Label:
-                text: "Vitesse de simulation :"
-                halign: "right"
-            TextInput:
-                id: vitesse_simulation
-                multiline: False
+                # Champ pour la longueur de la plage
+                Label:
+                    text: "Longueur de la plage (m) :"
+                    font_size: '20sp'
+                    halign: "right"
+                TextInput:
+                    id: longueur_plage
+                    multiline: False
 
-            # Exemple d'un paramètre sous forme de switch (activer/désactiver un mode)
-            Label:
-                text: "Mode avancé :"
-                halign: "right"
-            Switch:
-                id: mode_avance
+                # Champ supplémentaire : Taux de recyclage
+                Label:
+                    text: "Taux de recyclage (%) :"
+                    font_size: '20sp'
+                    halign: "right"
+                TextInput:
+                    id: taux_recyclage
+                    multiline: False
 
-            Label:
-                id: error_label
-                text: ""
-                color: 1, 0, 0, 1  # Texte rouge pour signaler une erreur
-                font_size: "14sp"
-                opacity: 0  # Caché par défaut
+                # Champ supplémentaire : Vitesse de simulation
+                Label:
+                    text: "Vitesse de simulation :"
+                    font_size: '20sp'
+                    halign: "right"
+                TextInput:
+                    id: vitesse_simulation
+                    multiline: False
+
+                # Exemple d'un paramètre sous forme de switch (activer/désactiver un mode)
+                Label:
+                    text: "Mode avancé :"
+                    font_size: '20sp'
+                    halign: "right"
+                Switch:
+                    id: mode_avance
+
+                Label:
+                    id: error_label
+                    text: ""
+                    color: 1, 0, 0, 1  # Texte rouge pour signaler une erreur
+                    font_size: "14sp"
+                    opacity: 0  # Caché par défaut
 
 
         # Bouton pour enregistrer/appliquer les paramètres
-        Button:
+        ButtonIcon:
+            icon_source: "assets/icones/icone_save.png"
             text: "Enregistrer les paramètres"
-            size_hint_y: 0.1
+            size_hint: (0.4, 0.1)
             on_press: root.enregistrer_parametres()
-        Button:
+        ButtonIcon:
+            icon_source: "assets/icones/icone_home.png"
+            size_hint: (0.4, 0.1)
             text: "Retour à l'accueil"
-            size_hint_y: 0.1
             on_press: app.root.current = "accueil"

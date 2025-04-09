@@ -25,19 +25,27 @@ class AccueilWidget(Widget):
         """Affiche un Popup pour avertir l'utilisateur et lui proposer de jouer."""
 
         box = BoxLayout(orientation="vertical", spacing=10, padding=10)
+        box2 = BoxLayout(orientation="horizontal", spacing=10, padding=5)
         label = Label(text="Aucun robot n'est connecté.\nVoulez-vous jouer en mode simulation ?")
-        
+        spacer1 = Widget(size_hint_x=1)
+        spacer2 = Widget(size_hint_x=1)
+        spacer3 = Widget(size_hint_x=1)
+
         # Boutons pour le choix de l'utilisateur
         btn_oui = Button(text="Oui")
-        btn_non = Button(text="Non", background_color=(1, 0, 0, 1))  # Rouge
+        btn_non = Button(text="Non")  # Rouge
         
         # Ajouter les boutons au layout vertical
         box.add_widget(label)
-        box.add_widget(btn_oui)
-        box.add_widget(btn_non)
+        box2.add_widget(spacer1)
+        box2.add_widget(btn_oui)
+        box2.add_widget(spacer2)
+        box2.add_widget(btn_non)
+        box2.add_widget(spacer3)
+        box.add_widget(box2)
 
         # Configuration du popup
-        popup = Popup(title="Attention", content=box, size_hint=(0.6, 0.4), auto_dismiss=False)
+        popup = Popup(title="Attention", content=box, size_hint=(0.4, 0.3), auto_dismiss=False)
         
         # Liens des boutons
         btn_oui.bind(on_press=lambda x: self.jouer_mode_simulation(popup))
