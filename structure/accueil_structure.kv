@@ -1,0 +1,47 @@
+<AccueilScreen>:
+    name: "accueil"
+    BoxLayout:
+        orientation: 'vertical'
+
+        BoxLayout:
+            orientation: 'vertical'
+
+            canvas.before:
+                Rectangle:
+                    source: "assets/backgrounds/background.jpg"
+                    pos: self.pos
+                    size: self.size
+
+            Label:
+                text: "Bienvenue sur le Simulateur de Robot"
+                font_size: "32sp"
+                color: 1, 1, 1, 1
+
+            ButtonIcon
+                text: "Nettoyer la plage"
+                icon_source: "assets/icones/icone_plage.png"
+                size_hint: (0.4, 0.15)
+                pos_hint: {"center_x": 0.5}
+                on_release: root.accueil_widget.on_simuler_pressed()
+
+            ButtonIcon
+                text: "Jouer en mode simulation"
+                icon_source: "assets/icones/icone_jeu.png"
+                size_hint: (0.4, 0.15)
+                pos_hint: {"center_x": 0.5}
+                on_release: app.root.current = "jeu"
+
+            ButtonIcon:
+                text: "Connecter un robot"
+                icon_source: "assets/icones/robot.png"
+                size_hint: (0.4, 0.15)
+                pos_hint: {"center_x": 0.5}
+                on_release: app.root.current = "robot"
+
+
+            ButtonIcon:
+                icon_source: "assets/icones/icone_option.png"
+                text: "Options et paramètres"
+                size_hint: (0.4, 0.15)
+                pos_hint: {"center_x": 0.5}
+                on_release: app.root.current = "options"

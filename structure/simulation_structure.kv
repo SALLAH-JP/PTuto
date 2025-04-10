@@ -1,0 +1,74 @@
+<SimulationScreen>:
+    name: "simulation"
+
+    BoxLayout:
+        orientation: "vertical"
+
+        BoxLayout:
+            size_hint_y: 0.1125
+            padding: dp(5)
+            spacing: dp(10)
+
+            canvas.before:
+                Color:
+                    rgba: 0.2, 0.2, 0.2, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(10)]
+
+            ButtonIcon:
+                icon_source: "assets/icones/icone_home.png"
+                text: ""
+                size_hint: (0.3, 0.8)
+                pos_hint: {"center_y": 0.5}
+                icon_pos: self.center_x - dp(16), self.center_y - dp(16)
+                on_release: app.root.current = "accueil"
+
+            Label:
+                id: score_label
+                text: "Score: 0/10"
+                font_size: '20sp'
+
+            ButtonIcon:
+                icon_source: "assets/icones/icone_dechet.png"
+                text: ""
+                size_hint: (0.3, 0.8)
+                pos_hint: {"center_y": 0.5}
+                icon_pos: self.center_x - dp(16), self.center_y - dp(16)
+                on_release: root.simulation_widget.generate_dechets()
+
+            Spinner:
+                id: parcours_spinner
+                text: "Parcours Classique"
+                values: ["Parcours Classique", "Parcours Spirale", "Parcours Aléatoire", "Parcours 4"]
+                size_hint: (0.5, 0.8)
+                pos_hint: {"center_y": 0.5}
+
+            ButtonIcon:
+                id: bouton
+                icon_source: "assets/icones/icone_start.png"
+                text: ""
+                size_hint: (0.3, 0.8)
+                pos_hint: {"center_y": 0.5}
+                icon_pos: self.center_x - dp(16), self.center_y - dp(16)
+                on_release: root.simulation_widget.demarrer_simulation()
+
+            ButtonIcon:
+                icon_source: "assets/icones/icone_stop.png"
+                text: ""
+                size_hint: (0.3, 0.8)
+                pos_hint: {"center_y": 0.5}
+                icon_pos: self.center_x - dp(16), self.center_y - dp(16)
+                on_release: root.simulation_widget.stop_simulation()
+
+
+        BoxLayout:
+            canvas.before:
+                Rectangle:
+                    source: "assets/backgrounds/plage.jpg"
+                    pos: self.pos
+                    size: self.size
+
+            Widget:
+                id: simulation_widget

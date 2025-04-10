@@ -49,7 +49,7 @@ class OptionsWidget(Widget):
             value = self.parent.ids[index].text
             if value == "" : value = config[index]
             
-            modify_variable(index, value)
+            modify_variable(index, int(value))
 
         modify_variable("mode_avance", self.parent.ids.mode_avance.active)
 
@@ -71,9 +71,6 @@ class OptionsScreen(Screen):
         super().__init__(**kwargs)
         self.options_widget = OptionsWidget()
         self.add_widget(self.options_widget)
-
-    def enregistrer_parametres(self):
-        self.options_widget.enregistrer_parametres()
 
     def on_pre_enter(self):
         self.options_widget.on_pre_enter()

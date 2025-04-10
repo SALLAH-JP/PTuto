@@ -15,7 +15,7 @@ class JeuWidget(Widget):
         self.score_dechet = 0
         self.dechets = []
         self.dechets_ratio = []
-        self.robot_ratio = (0, 0.5)
+        self.robot_ratio = ( 0, 0.5 )
         self.dechet_size = (100, 100)
 
         # Met à jour la position du robot si la fenêtre est redimensionnée
@@ -31,9 +31,11 @@ class JeuWidget(Widget):
                 Color(1, 1, 1, 1)
                 self.robot = Rectangle(
                     source="assets/robot/robot.jpg",
-                    pos=(0, self.center_y),
+                    pos=(15, self.parent.ids.jeu_widget.center_y),
                     size=(50, 50)
                 )
+
+            self.robot_ratio = ( 15/self.parent.ids.jeu_widget.width, 0.5 )
 
     def generate_dechets(self, nb_dechets=10):
 
@@ -52,7 +54,7 @@ class JeuWidget(Widget):
                 )
 
             self.dechets.append(dechet)
-            self.dechets_ratio.append((random_x/self.width, random_y/self.height))
+            self.dechets_ratio.append((random_x/self.parent.ids.jeu_widget.width, random_y/self.parent.ids.jeu_widget.height))
 
 
     def clear_dechets(self):
@@ -64,8 +66,8 @@ class JeuWidget(Widget):
 
     def update_robot_position(self, *args):
         """Met à jour la position du robot en fonction de la nouvelle taille du widget."""
-        pos_x = int( self.robot_ratio[0] * self.width )
-        pos_y = int( self.robot_ratio[1] * self.height )
+        pos_x = int( self.robot_ratio[0] * self.parent.ids.jeu_widget.width )
+        pos_y = int( self.robot_ratio[1] * self.parent.ids.jeu_widget.height )
 
         self.robot.pos = ( pos_x, pos_y )
 
@@ -74,8 +76,8 @@ class JeuWidget(Widget):
         index = 0
         for dechet in self.dechets:
 
-            pos_x = int( self.dechets_ratio[index][0] * self.width )
-            pos_y = int( self.dechets_ratio[index][1] * self.height )
+            pos_x = int( self.dechets_ratio[index][0] * self.parent.ids.jeu_widget.width )
+            pos_y = int( self.dechets_ratio[index][1] * self.parent.ids.jeu_widget.height )
 
             dechet.pos = (pos_x, pos_y)
             index += 1
@@ -97,12 +99,14 @@ class JeuWidget(Widget):
             self.ramasser_dechet()
 
 
-        # Assure que le robot reste dans les limites de l'écran
-        current_x = max(0, min(self.width, current_x))
-        current_y = max(0, min(self.height, current_y))
+        max_x = self.parent.ids.jeu_widget.width - 5
+        max_y = self.parent.ids.jeu_widget.height - 5
+
+        current_x = max(15, min(max_x, current_x))
+        current_y = max(15, min(max_y, current_y))
 
         self.robot.pos = (current_x, current_y)
-        self.robot_ratio = ( current_x/self.width, current_y/self.height )
+        self.robot_ratio = ( current_x/self.parent.ids.jeu_widget.width, current_y/self.parent.ids.jeu_widget.height )
 
     def load_level(self, text):
 
@@ -113,7 +117,7 @@ class JeuWidget(Widget):
             Color(1, 1, 1, 1)
             self.robot = Rectangle(
                 source="assets/robot/robot.jpg",
-                pos=(0, self.center_y),
+                pos=(15, self.parent.ids.jeu_widget.center_y),
                 size=(50, 50)
             )
 
@@ -153,12 +157,6 @@ class JeuScreen(Screen):
         self.jeu_widget = JeuWidget()
         self.add_widget(self.jeu_widget)
         self.first_time = True
-
-    def generate_dechets(self):
-        self.jeu_widget.generate_dechets()
-
-    def load_level(self, text):
-        self.jeu_widget.load_level(text)
 
     def on_pre_enter(self):
         self.jeu_widget.generate_robot()

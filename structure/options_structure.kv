@@ -1,0 +1,114 @@
+<OptionsScreen>:
+    name: "options"
+
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(20)
+
+        BoxLayout:
+            orientation: "vertical"
+
+            canvas.before:
+                Color:
+                    rgba: 0.2, 0.2, 0.2, 1  # Couleur de fond grise
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(10)] 
+
+            BoxLayout:
+                orientation: "vertical"
+                size_hint_y: 0.8
+
+                # Entête de l'écran
+                Label:
+                    text: "Options et Paramètres"
+                    font_size: "24sp"
+                    size_hint_y: 0.1
+                    padding: 20
+
+                # Formulaire sous forme de grille
+                GridLayout:
+                    cols: 2
+                    spacing: dp(10)
+                    size_hint_y: 0.8
+
+                    # Champ pour le nombre de déchets
+                    Label:
+                        text: "Nombre de déchets :"
+                        font_size: '20sp'
+                        halign: "right"
+                    TextInput:
+                        id: nb_dechets
+                        multiline: False
+
+                    # Champ pour la largeur de la plage
+                    Label:
+                        text: "Largeur de la plage (m) :"
+                        font_size: '20sp'
+                        halign: "right"
+                    TextInput:
+                        id: largeur_plage
+                        multiline: False
+
+                    # Champ pour la longueur de la plage
+                    Label:
+                        text: "Longueur de la plage (m) :"
+                        font_size: '20sp'
+                        halign: "right"
+                    TextInput:
+                        id: longueur_plage
+                        multiline: False
+
+                    # Champ supplémentaire : Taux de recyclage
+                    Label:
+                        text: "Taux de recyclage (%) :"
+                        font_size: '20sp'
+                        halign: "right"
+                    TextInput:
+                        id: taux_recyclage
+                        multiline: False
+
+                    # Champ supplémentaire : Vitesse de simulation
+                    Label:
+                        text: "Vitesse de simulation :"
+                        font_size: '20sp'
+                        halign: "right"
+                    TextInput:
+                        id: vitesse_simulation
+                        multiline: False
+
+                    # Exemple d'un paramètre sous forme de switch (activer/désactiver un mode)
+                    Label:
+                        text: "Mode avancé :"
+                        font_size: '20sp'
+                        halign: "right"
+                    Switch:
+                        id: mode_avance
+
+                    Label:
+                        id: error_label
+                        text: ""
+                        color: 1, 0, 0, 1  # Texte rouge pour signaler une erreur
+                        font_size: "14sp"
+                        opacity: 0  # Caché par défaut
+
+
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    spacing: dp(40)
+                    size_hint_y: 0.2
+
+                    ButtonIcon:
+                        icon_source: "assets/icones/icone_home.png"
+                        size_hint: (0.1, 0.8)
+                        text: "Retour à l'accueil"
+                        on_press: app.root.current = "accueil"
+                    ButtonIcon:
+                        icon_source: "assets/icones/icone_save.png"
+                        text: "Enregistrer les paramètres"
+                        size_hint: (0.1, 0.8)
+                        on_press: root.options_widget.enregistrer_parametres()
+                    

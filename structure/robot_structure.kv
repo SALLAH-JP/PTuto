@@ -1,0 +1,153 @@
+<RobotScreen>:
+    name: "robot"
+
+    BoxLayout:
+        orientation: 'horizontal'
+        padding: dp(20)
+        spacing: dp(10)
+
+        # Partie gauche : Conteneur vertical pour l'image et le bouton
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_x: 0.3   # Occupe 30% de la largeur totale
+            spacing: dp(10)
+
+            # Label de statut global
+            Label:
+                id: status_label
+                text: ''
+                size_hint_y: None
+                height: dp(30)
+                color: 1,1,1,1
+
+            Image:
+                source: "assets/robot/robot2.jpg"
+                size_hint_y: 1
+            
+            ButtonIcon:
+                icon_source: "assets/icones/icone_home.png"
+                text: ""
+                size_hint: (0.7, 0.1)
+                pos_hint: {"center_y": 0.5, "center_x": 0.5}
+                icon_pos: self.center_x - dp(16), self.center_y - dp(16)
+                on_release: app.root.current = "accueil"
+
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: 0  # Suppression de l'espace entre les deux zones
+
+            canvas.before:
+                Color:
+                    rgba: 0.2, 0.2, 0.2, 1  # Fond gris
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(10)]
+
+            TabbedPanel:
+                do_default_tab: False  # Supprime le premier onglet par défaut
+                tab_pos: 'top_mid'
+                tab_width: 200
+                tab_height: dp(75)
+
+                canvas.after:
+                    # Tracer une ligne noire entre les onglets et le contenu
+                    Color:
+                        rgba: 1, 1, 1, 1  # Couleur noire
+                    Line:
+                        points: [self.x, self.top - self.tab_height, self.right, self.top - self.tab_height]
+                        width: dp(1)
+
+
+                TabbedPanelItem:
+                    text: "USB"
+                    BoxLayout:
+                        orientation: 'vertical'
+                        padding: dp(20)
+                        spacing: dp(10)
+
+                        Label:
+                            text: "Connexion USB"
+                            font_size: '24sp'
+                            size_hint_y: None
+
+                        Label:
+                            text: "Port COM :"
+                        TextInput:
+                            id: port_input
+                            hint_text: "Entrez le port COM"
+                            multiline: False
+                            size_hint_y: None
+                            height: dp(40)
+
+                        ButtonIcon:
+                            icon_source: "assets/icones/icone_link.png"
+                            size_hint: (0.4, 0.2)
+                            text: "Connecter"
+                            on_release: root.connect_usb(port_input.text)
+
+                TabbedPanelItem:
+                    text: "Bluetooth"
+                    BoxLayout:
+                        orientation: 'vertical'
+                        padding: dp(20)
+                        spacing: dp(10)
+
+                        Label:
+                            text: "Connexion Bluetooth"
+                            font_size: '24sp'
+                            size_hint_y: None
+                            height: dp(50)
+
+                        Label:
+                            text: "Address MAC :"
+                        TextInput:
+                            id: address_input
+                            hint_text: "Entrez le port COM"
+                            multiline: False
+                            size_hint_y: None
+                            height: dp(40)
+
+                        ButtonIcon:
+                            icon_source: "assets/icones/icone_link.png"
+                            size_hint: (0.4, 0.2)
+                            text: "Pairer"
+                            on_release: root.connect_bluetooth(address_input.text)
+
+                TabbedPanelItem:
+                    text: "Wi-Fi"
+                    BoxLayout:
+                        orientation: 'vertical'
+                        padding: dp(20)
+                        spacing: dp(10)
+
+                        Label:
+                            text: "Connexion Wi-Fi"
+                            font_size: '24sp'
+                            size_hint_y: None
+                            height: dp(50)
+
+                        Label:
+                            text: "Adresse IP :"
+                        TextInput:
+                            id: wifi_ip_input
+                            hint_text: "Entrez l'adresse IP"
+                            multiline: False
+                            size_hint_y: None
+                            height: dp(40)
+
+                        Label:
+                            text: "Port :"
+                        TextInput:
+                            id: wifi_port_input
+                            hint_text: "Entrez le port"
+                            password: True
+                            multiline: False
+                            size_hint_y: None
+                            height: dp(40)
+
+                        ButtonIcon:
+                            icon_source: "assets/icones/icone_link.png"
+                            size_hint: (0.4, 0.6)
+                            text: "Connecter"
+                            on_release: root.connect_wifi(wifi_ip_input.text, wifi_port_input.text)

@@ -1,5 +1,5 @@
 {
-    "nb_dechets": "10",
+    "nb_dechets": 10,
     "largeur_plage": 50,
     "longueur_plage": 100,
     "taux_recyclage": 25,

@@ -15,9 +15,9 @@ class AccueilWidget(Widget):
 
     def on_simuler_pressed(self):
         """Vérifie si un robot est connecté et ouvre un Popup si aucun n'est trouvé."""
-        conf = load_config()
+        config = load_config()
 
-        if not conf["robot_connect"]: self.afficher_popup()
+        if not config["robot_connect"]: self.afficher_popup()
 
         else: self.parent.manager.current = "simulation"
 
@@ -26,7 +26,7 @@ class AccueilWidget(Widget):
 
         box = BoxLayout(orientation="vertical", spacing=10, padding=10)
         box2 = BoxLayout(orientation="horizontal", spacing=10, padding=5)
-        label = Label(text="Aucun robot n'est connecté.\nVoulez-vous jouer en mode simulation ?")
+        label = Label(text="Aucun robot n'est connecté.\nVoulez-vous lancer la simulation ?")
         spacer1 = Widget(size_hint_x=1)
         spacer2 = Widget(size_hint_x=1)
         spacer3 = Widget(size_hint_x=1)
@@ -58,7 +58,7 @@ class AccueilWidget(Widget):
         """Action lorsque l'utilisateur choisit de jouer en mode simulation."""
         
         popup.dismiss()
-        self.parent.manager.current = "jeu"
+        self.parent.manager.current = "simulation"
 
 
 class AccueilScreen(Screen):
@@ -66,6 +66,3 @@ class AccueilScreen(Screen):
         super().__init__(**kwargs)
         self.accueil_widget = AccueilWidget()
         self.add_widget(self.accueil_widget)
-
-    def on_simuler_pressed(self):
-        self.accueil_widget.on_simuler_pressed()

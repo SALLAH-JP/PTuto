@@ -15,8 +15,9 @@ from kivy.lang import Builder
 # Définir l'icône de la fenêtre
 Window.set_icon("assets/robot/robot.jpg")
 
-Builder.load_file('interface.kv')
-Builder.load_file('style.kv')
+for nom in ["interface", "style", "accueil_structure", "jeu_structure", "simulation_structure", "robot_structure", "options_structure"]:
+    Builder.load_file("structure/" + nom + ".kv")
+
 
 
 class MyScreenManager(ScreenManager):

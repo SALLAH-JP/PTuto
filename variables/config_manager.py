@@ -3,9 +3,8 @@ import os
 
 CONFIG_FILE = "variables/config.json"
 
-# Configuration par défaut avec toutes les variables en un seul niveau
 default_config = {
-    "nb_dechets": 100,
+    "nb_dechets": 10,
     "largeur_plage": 50,
     "longueur_plage": 100,
     "taux_recyclage": 25,
@@ -42,7 +41,6 @@ def modify_variable(variable, value):
     if variable in config:
         config[variable] = value
         save_config(config)
-        print(f"Variable '{variable}' modifiée avec la valeur '{value}'.")
 
     else:
         print(f"Erreur : Variable '{variable}' introuvable.")

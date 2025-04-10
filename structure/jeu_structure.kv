@@ -1,0 +1,55 @@
+<JeuScreen>:
+    name: "jeu"
+
+    BoxLayout:
+        orientation: "vertical"
+
+        BoxLayout:
+            size_hint_y: 0.1125
+            padding: dp(5)
+            spacing: dp(10)
+            canvas.before:
+                Color:
+                    rgba: 0.2, 0.2, 0.2, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(10)]
+
+            ButtonIcon:
+                icon_source: "assets/icones/icone_home.png"
+                text: ""
+                size_hint: (0.3, 0.8)
+                pos_hint: {"center_y": 0.5}
+                icon_pos: self.center_x - dp(16), self.center_y - dp(16)
+                on_release: app.root.current = "accueil"
+
+            Label:
+                id: score_label
+                text: "Score: 0/10"
+                font_size: '20sp'
+            Label:
+                id: life_label
+                text: "Vies: 3"
+                font_size: '20sp'
+
+            Spinner:
+                id: level_spinner
+                text: "Niveau 1"
+                values: ["Niveau 1", "Niveau 2", "Niveau 3"]
+                size_hint: (None, None)
+                size: dp(120), dp(40)
+                pos_hint: {"center_y": 0.5}
+                # Lorsqu'on change le choix, on lance le chargement du niveau
+                on_text: root.jeu_widget.load_level(self.text)
+
+
+        BoxLayout:
+            canvas.before:
+                Rectangle:
+                    source: "assets/backgrounds/plage.jpg"
+                    pos: self.pos
+                    size: self.size
+
+            Widget:
+                id: jeu_widget
