@@ -70,6 +70,19 @@
                             text: "Connexion USB"
                             font_size: '24sp'
                             size_hint_y: None
+                        Label:
+                            text: "Appareils disponibles:"
+                            font_size: '12sp'
+                            halign: 'left'
+                            size_hint_x: None
+                        Label:
+                            text: ""
+                            id: dev
+                            width: self.texture_size[0]
+                            text_size: self.width, self.height
+                            halign: 'left'
+                            valign: 'top'
+                            height: self.texture_size[1]
 
                         Label:
                             text: "Port COM :"
@@ -82,9 +95,9 @@
 
                         ButtonIcon:
                             icon_source: "assets/icones/icone_link.png"
-                            size_hint: (0.4, 0.2)
+                            size_hint: (0.4, 0.4)
                             text: "Connecter"
-                            on_release: root.connect_usb(port_input.text)
+                            on_release: root.robot_widget.connect_usb()
 
                 TabbedPanelItem:
                     text: "Bluetooth"
@@ -112,7 +125,7 @@
                             icon_source: "assets/icones/icone_link.png"
                             size_hint: (0.4, 0.2)
                             text: "Pairer"
-                            on_release: root.connect_bluetooth(address_input.text)
+                            on_release: root.robot_widget.connect_bluetooth()
 
                 TabbedPanelItem:
                     text: "Wi-Fi"
@@ -150,4 +163,4 @@
                             icon_source: "assets/icones/icone_link.png"
                             size_hint: (0.4, 0.6)
                             text: "Connecter"
-                            on_release: root.connect_wifi(wifi_ip_input.text, wifi_port_input.text)
+                            on_release: root.robot_widget.connect_wifi()

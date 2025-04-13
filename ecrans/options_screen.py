@@ -26,42 +26,48 @@ class OptionsWidget(Widget):
 
 
     def enregistrer_parametres(self):
-
         config = load_config()
         
-        for index in [ "nb_dechets", "largeur_plage", "longueur_plage", "taux_recyclage", "vitesse_simulation"]:
-
-            value = self.parent.ids[index].text
-            if value == "" : value = config[index]
-
-            try:
-                value = int( value )
+        try:
+            for index in ["nb_dechets", "largeur_plage", "longueur_plage", "taux_recyclage", "vitesse_simulation"]:
+                value = self.parent.ids[index].text
+                
+                if value == "": value = config[index]
+                
+                try:
+                    value = int(value)
+                except ValueError:
+                    raise ValueError(f"Le paramètre '{index}' doit être un entier valide.")
 
                 if value <= 0:
-                    raise ValueError("Toutes les valeurs doivent être positives.")
+                    raise ValueError(f"Le paramètre '{index}' doit être strictement supérieur à zéro.")
+        
+        except ValueError as e:
+            self.show_temporary_message(str(e), (1, 0, 0, 1))
+            return
 
-            except ValueError as e:
-                self.show_temporary_message(str(e))
-                return
-
-        for index in [ "nb_dechets", "largeur_plage", "longueur_plage", "taux_recyclage", "vitesse_simulation"]:
-
+        for index in ["nb_dechets", "largeur_plage", "longueur_plage", "taux_recyclage", "vitesse_simulation"]:
             value = self.parent.ids[index].text
-            if value == "" : value = config[index]
+            if value == "": value = config[index]
+
+            if index == "nb_dechets" and int(value) > 200: value = 200
             
             modify_variable(index, int(value))
 
         modify_variable("mode_avance", self.parent.ids.mode_avance.active)
+        self.on_pre_enter()
+        self.show_temporary_message("Les paramètres ont été enregistrer avec succès.", (0, 1, 0, 1))
 
 
 
-    def show_temporary_message(self, message):
+    def show_temporary_message(self, message, couleur):
         """Affiche un message temporaire avec animation."""
         label = self.parent.ids.error_label
         label.text = message
+        label.color = couleur
 
         # Animation pour rendre le message visible et disparaître
-        anim = Animation(opacity=1, duration=0.5) + Animation(opacity=0, duration=2)
+        anim = Animation(opacity=1, duration=2) + Animation(opacity=0, duration=5)
         anim.start(label)
 
 

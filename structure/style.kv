@@ -1,8 +1,8 @@
 #:import dp kivy.metrics.dp
 #:import utils kivy.utils
 #:import Window kivy.core.window.Window
-#:import ButtonIcon ecrans.class
-
+#:import ButtonIcon ecrans.classe
+#:import DimmingWidget ecrans.classe
 
 
 
@@ -21,7 +21,7 @@
         RoundedRectangle:
             pos: self.pos
             size: self.size
-            radius: [dp(12)]          # Coins arrondis
+            radius: [dp(12)]
 
 # Style global pour les labels
 <Label>:
@@ -34,7 +34,8 @@
     font_size: "16sp"
     foreground_color: 0, 0, 0, 1  # Texte en noir
     background_color: 1, 1, 1, 1  # Fond blanc
-    padding: [dp(10), dp(10)]
+    halign: "left"
+    valign: "middle"
     multiline: False
 
 # Style global pour les BoxLayout (espacement et marges par défaut)
@@ -131,7 +132,7 @@
 
 <ButtonIcon>:
     #background_normal: ""        # Désactive l'image de fond par défaut
-    background_color: 0, 0, 0, 0   # On souhaite utiliser uniquement le canvas pour le fond
+    background_color: (0.25, 0.5, 0.8, 1)   # On souhaite utiliser uniquement le canvas pour le fond
     color: 1, 1, 1, 1
     font_size: (Window.width * 0.02 + Window.height * 0.02) / 2
     pos_hint: {"center_x": 0.5}
@@ -141,7 +142,7 @@
 
     canvas.before:
         Color:
-            rgba: (0.25, 0.5, 0.8, 1)  #  if not self.text=="Non" else (1, 0, 0, 1)
+            rgba: root.background_color  #  if not self.text=="Non" else (1, 0, 0, 1)
         RoundedRectangle:
             pos: self.pos
             size: self.size
@@ -157,4 +158,11 @@
     valign: "middle"
     text_size: self.size
 
-
+<DimmingWidget>:
+    BoxLayout:
+        canvas.after:
+            Color:
+                rgba: 0, 0, 0, root.dim_opacity  # Assombrissement contrôlé par dim_opacity
+            Rectangle:
+                pos: (root.pos[0] - 15, root.pos[1] - 15)
+                size: (root.size[0] + 30, root.size[1] + 30)

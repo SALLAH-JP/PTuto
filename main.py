@@ -10,6 +10,7 @@ from ecrans.jeu_screen import JeuScreen
 from ecrans.simulation_screen import SimulationScreen
 from ecrans.robot_screen import RobotScreen
 from ecrans.options_screen import OptionsScreen
+#from ecrans.options_screen import OptionsScreen
 from kivy.lang import Builder
 
 # Définir l'icône de la fenêtre
